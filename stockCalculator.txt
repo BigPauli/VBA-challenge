@@ -1,0 +1,73 @@
+Sub stockCalculator():
+    Dim index As Integer
+    Dim curr As String
+    Dim stockVolume As LongLong
+    Dim firstOpen As Double
+    Dim lastClose As Double
+    Dim percentChange As Double
+    
+    Dim greatestIncrease As Double
+    Dim greatestDecrease As Double
+    Dim greatestVolume As LongLong
+    Dim gITicker As String
+    Dim gDTicker As String
+    Dim gVTicker As String
+    
+    'Initialize relevant values
+    index = 2
+    curr = Cells(2, 1).Value
+    firstOpen = Cells(2, 3).Value
+    stockVolume = 0
+    
+    'Setting greatestIncrease, greatestDecrease, and greatestVolume to be effectively infinite for comparisons
+    'These numbers were obtained from Microsoft Learn
+    greatestIncrease = -9.22337203685478E+18
+    greatestDecrease = 9.22337203685478E+18
+    greatestVolume = -9.22337203685478E+18
+    
+    For i = 2 To 93002
+    ' Check to see if we came across a new ticker
+        If Cells(i, 1).Value <> curr Then
+            ' If we did, fill out all the information for the previous ticker in the proper cells
+            percentChange = (lastClose - firstOpen) / firstOpen
+            Cells(index, 9).Value = curr
+            Cells(index, 10).Value = lastClose - firstOpen
+            Cells(index, 11).Value = percentChange
+            Cells(index, 12).Value = stockVolume
+            
+            'Update greatestIncrease, greatestDecrease, and greatestVolume
+            If percentChange > greatestIncrease Then
+                greatestIncrease = percentChange
+                gITicker = curr
+            End If
+            
+            If percentChange < greatestDecrease Then
+                greatestDecrease = percentChange
+                gDTicker = curr
+            End If
+            
+            If stockVolume > greatestVolume Then
+                greatestVolume = stockVolume
+                gVTicker = curr
+            End If
+            
+            'Reset our values for the next ticker type
+            curr = Cells(i, 1).Value
+            index = index + 1
+            firstOpen = Cells(i, 3).Value
+            stockVolume = Cells(i, 7).Value
+        
+        'If we are still on the same ticker, update stockVolume and lastClose
+        Else
+            stockVolume = stockVolume + Cells(i, 7).Value
+            lastClose = Cells(i, 6).Value
+        End If
+    Next i
+    'Fill in greatestIncrease, greatestDecrease, and greatestVolume values
+    Range("P2").Value = gITicker
+    Range("Q2").Value = greatestIncrease
+    Range("P3").Value = gDTicker
+    Range("Q3").Value = greatestDecrease
+    Range("P4").Value = gVTicker
+    Range("Q4").Value = greatestVolume
+End Sub

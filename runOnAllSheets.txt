@@ -1,0 +1,9 @@
+Sub runOnAllSheets():
+' This function was written with help from https://www.mrexcel.com/board/threads/is-there-a-way-to-apply-a-macro-across-all-worksheets.997398/
+' https://stackoverflow.com/questions/2695198/calling-a-sub-or-function-contained-in-a-module-using-callbyname-in-vb-vba
+' and from the Xpert AI
+For Each xsheet In ThisWorkbook.Worksheets
+    xsheet.Select
+    Application.Run "stockCalculator"
+Next xsheet
+End Sub
